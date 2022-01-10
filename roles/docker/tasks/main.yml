@@ -1,0 +1,61 @@
+---
+# tasks file for roles/docker
+# Installation of Docker and Dependencies (Start)
+
+- name: Install Prerequisites
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
+
+- name: Install Docker File
+  apt: 
+    name: docker.io
+    state: latest
+    update_cache: yes
+  register: docker
+
+- name: Install docker.py
+  pip:
+    name: docker.py
+    state: latest
+
+- name: Installation of docker-py package
+  pip: name=docker-py
+# Installation of Docker and Dependecies (END)
+
+# Creation of docker directory and copying docker-files (START)
+- name: Creating Build Directory
+  file:
+    path: "/home/macan_ubuntu/Macan_Containerization/docker"
+    state: directory
+
+- name: Copying Dockerfile
+  copy:
+    src: "/home/macan_ubuntu/Macan_Containerization/Dockerfile"
+    dest: "/home/macan_ubuntu/Macan_Containerization/docker/Dockerfile"
+# Creation of Docker directory and copying Dockerfiles (END)
+
+
+
+
+# Creation of Docker Container (START)
+- name: Building Container Image
+  docker_image:
+    name: hoa5-1
+    tag: v1
+    path: "/home/macan_ubuntu/Macan_Containerization/docker"
+    state: present
+# Creation of Docker Container (END)
+
+
+# Running the created Docker Container(START)
+- name: Running the Container
+  docker_container:
+    image: hoa5-1:v1
+    name: hoa5-1
+    state: started
+    ports:
+      - "8080:80"
+# Running the created Docker Container(END)

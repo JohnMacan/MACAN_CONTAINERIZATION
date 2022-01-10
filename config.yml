@@ -1,0 +1,8 @@
+---
+ - name: Install Docker in Ubuntu
+   hosts: all
+   gather_facts: no
+
+
+   roles:
+     - ubuntu/docker
